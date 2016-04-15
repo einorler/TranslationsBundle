@@ -51,9 +51,8 @@ class ListController extends Controller
     {
         /** @var SearchResponse $fmr */
         $fmr = $this->get('ongr_translations.filter_manager')->handleRequest($request);
-
         return $this->render(
-            'ONGRTranslationsBundle:List:list.html.twig',
+            'ONGRTranslationsBundle:List:list1.html.twig',
             [
                 'data' => iterator_to_array($fmr->getResult()),
                 'locales' => $this->buildLocalesList($fmr->getFilters()['locale']),
@@ -71,16 +70,10 @@ class ListController extends Controller
      */
     private function buildLocalesList($filter)
     {
-        $search = $this->repository->createSearch();
-
-        $localeAgg = new TermsAggregation('locale_agg');
-        $localeAgg->setField('messages.locale');
-        $search->addAggregation($localeAgg);
-        $result = $this->repository->execute($search, Result::RESULTS_RAW);
         $list = [];
 
-        foreach ($result['aggregations']['locale_agg']['buckets'] as $value) {
-            $list[$value['key']] = true;
+        foreach ($this->getParameter('ongr_translations.managed_locales') as $value) {
+            $list[$value] = true;
         }
         ksort($list);
 
