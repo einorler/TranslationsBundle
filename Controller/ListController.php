@@ -51,8 +51,9 @@ class ListController extends Controller
     {
         /** @var SearchResponse $fmr */
         $fmr = $this->get('ongr_translations.filter_manager')->handleRequest($request);
+        $data = iterator_to_array($fmr->getResult());
         return $this->render(
-            'ONGRTranslationsBundle:List:list1.html.twig',
+            'ONGRTranslationsBundle:List:list.html.twig',
             [
                 'data' => iterator_to_array($fmr->getResult()),
                 'locales' => $this->buildLocalesList($fmr->getFilters()['locale']),
@@ -87,5 +88,26 @@ class ListController extends Controller
         }
 
         return $list;
+    }
+
+    /**
+     * Renders out a page with all the info about a translation
+     *
+     * @param Request $request
+     * @param String $translation
+     *
+     * @return Response
+     */
+    public function translationAction(Request $request, $translation)
+    {
+        $fmr = $this->get('ongr_translations.filter_manager')->handleRequest($request);
+        foreach ($this->repository->findBy(['key' => $translation]) as $translation) {
+            $translation = $translation;
+        }
+        return $this->render('ONGRTranslationsBundle:List:translation.html.twig', [
+            'translation' => $translation,
+            'filters_manager' => $fmr,
+            'locales' => $this->buildLocalesList($fmr->getFilters()['locale']),
+        ]);
     }
 }

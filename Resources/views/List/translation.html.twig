@@ -1,0 +1,55 @@
+{% extends 'ONGRTranslationsBundle::layout1.html.twig' %}
+
+{% block content %}
+        <div class="container">
+            <div class="col-md-6">
+                <h3>Information</h3>
+                <strong>Key:</strong> {{ translation.key }}
+                <p><strong>{% trans from 'ONGRTranslations' %}label.timestamp{% endtrans %}</strong></p>
+                <ul class="list-unstyled">
+                    <li>
+                        <strong>{% trans from 'ONGRTranslations' %}label.created_at{% endtrans %}:</strong> {{ translation.createdAt|date("Y m d H:i") }}
+                    </li>
+                    <li>
+                        <strong>{% trans from 'ONGRTranslations' %}label.updated_at{% endtrans %}:</strong> {{ translation.updatedAt|date("Y m d H:i") }}
+                    </li>
+                </ul>
+                <p><strong>{% trans from 'ONGRTranslations' %}label.tag{% endtrans %}:</strong></p>
+                <p><input type="text"></p>
+                <input type="submit" class="btn btn-primary" value="Add a tag">
+            </div>
+            <div class="col-md-6">
+                <h3>{% trans from 'ONGRTranslations' %}label.message{% endtrans %}</h3>
+                <form action="{{ path('ongr_translations_api_edit') }}" method="post">
+                <ul class="list-inline">
+                    {% for locale,active in locales %}
+                        <li class="col-md-10">
+                            <div class="col-sm-2">
+                                <strong>{{ locale }}:</strong>
+                            </div>
+                            <div class="col-sm-10">
+                                <input type="text" name="locale-{{ locale }}"
+                                       classvalue="{{ translation.key|trans({}, 'ONGRTranslations', locale) }}">
+                                <p>Status:
+                                    {% for message in translation.getMessages() %}
+                                    {% if message.getLocale() == locale %}
+                                        <span
+                                                {% if message.getStatus() == 'fresh' %}
+                                                class="label label-success">
+                                    {% else %}
+                                        class="label label-danger">
+                                            {% endif %}
+                                            {{ message.getStatus() }}
+                                    </span>
+                                    {% endif %}
+                                {% endfor %}
+                                </p>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+                </form>
+                <input type="submit" class="btn btn-primary" value="Update">
+            </div>
+        </div>
+{% endblock %}
