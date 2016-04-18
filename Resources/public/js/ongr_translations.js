@@ -75,10 +75,10 @@ function messageCancel(element, key, message, locale)
     var $el = jQuery(element);
     if ($el.siblings('.update').hasClass('btn-success')) {
         message = $el.parent().siblings('input').val();
+        $el.closest('td').removeClass('bg-danger');
     }
     var content = '<a class="translation-message" onclick="messageEdit(event, this, \''+key+'\', \''+message+'\',\''+locale+'\');" ' +
         'locale="'+locale+'">'+message+'</a>';
-    $el.closest('td').removeClass('bg-danger');
     $el.closest('td').html(content);
 }
 
