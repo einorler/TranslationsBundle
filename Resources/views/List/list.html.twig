@@ -44,7 +44,7 @@
                                     {% endif %}
                                 {% endfor %}
                                 <td>
-                                    <a href="{{ path('ongr_translations_translation_page', {'translation': translation.key}) }}">
+                                    <a href="{{ path('ongr_translations_translation_page', {'translation': translation.key, 'domain': translation.domain}) }}">
                                         <button class="btn btn-default" type="button">
                                             <i class="glyphicon glyphicon-cog"></i>
                                         </button>

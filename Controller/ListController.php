@@ -92,11 +92,12 @@ class ListController extends Controller
      * Renders out a page with all the info about a translation
      *
      * @param Request $request
-     * @param String $translation
+     * @param String  $translation
+     * @param String  $domain
      *
      * @return Response
      */
-    public function translationAction(Request $request, $translation)
+    public function translationAction(Request $request, $translation, $domain)
     {
         $cache = $this->get('es.cache_engine');
         $params = [];
@@ -105,9 +106,7 @@ class ListController extends Controller
             $cache->delete('translations_edit');
         }
         $fmr = $this->get('ongr_translations.filter_manager')->handleRequest($request);
-        foreach ($this->repository->findBy(['key' => $translation]) as $translationObject) {
-            $translation = $translationObject;
-        }
+        $translation = $this->repository->findOneBy(['key' => $translation, 'domain' => $domain]);
         $params['translation'] = $translation;
         $params['locales'] = $this->buildLocalesList($fmr->getFilters()['locale']);
 

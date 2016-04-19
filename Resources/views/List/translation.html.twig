@@ -26,7 +26,6 @@
             <form id="translationAddTagForm" action="{{ path('ongr_translations_translation_add_tag') }}" method="post">
                 <p><input type="text" name="properties[name]"></p>
                 <input type="text" class="hidden" name="id" id="translationId" value="{{ translation.id }}">
-                <input type="text" class="hidden" name="key" id="translationKey" value="{{ translation.key }}">
                 <input type="text" class="hidden" name="name" id="translationActionName" value="tags">
                 <input type="submit" class="btn btn-primary" value="Add a tag">
             </form>
@@ -35,7 +34,6 @@
             <h3>{% trans from 'ONGRTranslations' %}label.message{% endtrans %}</h3>
             <form action="{{ path('ongr_translations_translation_messages_edit') }}" method="post">
                 <input type="text" class="hidden" name="id" id="translationId" value="{{ translation.id }}">
-                <input type="text" class="hidden" name="key" id="translationId" value="{{ translation.key }}">
                 <input type="text" class="hidden" name="name" id="translationActionName" value="messages">
                 <ul class="list-inline">
                     {% for locale,active in locales %}

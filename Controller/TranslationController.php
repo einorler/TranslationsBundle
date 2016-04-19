@@ -11,6 +11,7 @@
 
 namespace ONGR\TranslationsBundle\Controller;
 
+use ONGR\ElasticsearchBundle\Service\Repository;
 use ONGR\FilterManagerBundle\Filter\ViewData;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,6 +25,20 @@ use Symfony\Component\HttpFoundation\Response;
 class TranslationController extends Controller
 {
     /**
+     * @var Repository
+     */
+    private $repository;
+
+    /**
+     * Injects elasticsearch repository for listing actions.
+     *
+     * @param Repository $repository Elasticsearch repository.
+     */
+    public function __construct(Repository $repository)
+    {
+        $this->repository = $repository;
+    }
+    /**
      * Add a tag action
      *
      * @param Request $request
@@ -33,6 +48,7 @@ class TranslationController extends Controller
     public function addTagAction(Request $request)
     {
         $response = [];
+        $translation = $this->repository->find($request->request->get('id'));
         $cache = $this->get('es.cache_engine');
         $requestHandler = $this->get('ongr_translations.request_handler');
         try {
@@ -50,6 +66,7 @@ class TranslationController extends Controller
                 'ongr_translations_translation_page',
                 [
                     'translation' => $request->request->get('key'),
+                    'domain' => $translation->getDomain(),
                 ]
             )
         );
@@ -65,6 +82,7 @@ class TranslationController extends Controller
     public function editAction(Request $request)
     {
         $response = [];
+        $translation = $this->repository->find($request->request->get('id'));
         $cache = $this->get('es.cache_engine');
         $requestHandler = $this->get('ongr_translations.request_handler');
         $requests = $requestHandler->remakeRequest($request);
@@ -84,7 +102,8 @@ class TranslationController extends Controller
             $this->generateUrl(
                 'ongr_translations_translation_page',
                 [
-                    'translation' => $request->request->get('key'),
+                    'translation' => $translation->getKey(),
+                    'domain' => $translation->getDomain(),
                 ]
             )
         );
