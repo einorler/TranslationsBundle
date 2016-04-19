@@ -65,7 +65,7 @@ class TranslationController extends Controller
             $this->generateUrl(
                 'ongr_translations_translation_page',
                 [
-                    'translation' => $request->request->get('key'),
+                    'translation' => $translation->getKey(),
                     'domain' => $translation->getDomain(),
                 ]
             )
