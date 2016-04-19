@@ -65,3 +65,11 @@ ongr_translations_api_history:
         _controller: ONGRTranslationsBundle:Api:history
     options:
         expose: true
+
+ongr_translations_translation_add_tag:
+    path: /translation/add/tag
+    methods: [POST]
+    defaults:
+        _controller: ONGRTranslationsBundle:Translation:addTag
+    options:
+        expose: true

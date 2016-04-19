@@ -12,7 +12,6 @@
 namespace ONGR\TranslationsBundle\Controller;
 
 use ONGR\ElasticsearchBundle\Result\Result;
-use ONGR\ElasticsearchDSL\Aggregation\TermsAggregation;
 use ONGR\ElasticsearchBundle\Service\Repository;
 use ONGR\FilterManagerBundle\Filter\ViewData;
 use ONGR\FilterManagerBundle\Search\SearchResponse;
@@ -51,7 +50,6 @@ class ListController extends Controller
     {
         /** @var SearchResponse $fmr */
         $fmr = $this->get('ongr_translations.filter_manager')->handleRequest($request);
-        $data = iterator_to_array($fmr->getResult());
         return $this->render(
             'ONGRTranslationsBundle:List:list.html.twig',
             [
@@ -100,14 +98,23 @@ class ListController extends Controller
      */
     public function translationAction(Request $request, $translation)
     {
-        $fmr = $this->get('ongr_translations.filter_manager')->handleRequest($request);
-        foreach ($this->repository->findBy(['key' => $translation]) as $translation) {
-            $translation = $translation;
+        $cache = $this->get('es.cache_engine');
+        $params = [];
+        if ($cache->contains('translations_edit')) {
+            $params = $cache->fetch('translations_edit');
+            $cache->delete('translations_edit');
         }
-        return $this->render('ONGRTranslationsBundle:List:translation.html.twig', [
-            'translation' => $translation,
-            'filters_manager' => $fmr,
-            'locales' => $this->buildLocalesList($fmr->getFilters()['locale']),
-        ]);
+        $fmr = $this->get('ongr_translations.filter_manager')->handleRequest($request);
+        foreach ($this->repository->findBy(['key' => $translation]) as $translationObject) {
+            $translation = $translationObject;
+        }
+        $params['translation'] = $translation;
+        $params['filters_manager'] = $fmr;
+        $params['locales'] = $this->buildLocalesList($fmr->getFilters()['locale']);
+
+        return $this->render(
+            'ONGRTranslationsBundle:List:translation.html.twig',
+            $params
+        );
     }
 }
