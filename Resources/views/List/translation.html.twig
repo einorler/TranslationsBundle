@@ -46,20 +46,24 @@
                             <div class="col-sm-10">
                                 <input type="text" class="hidden" name="locales[]" id="translationKey" value="{{ locale }}">
                                 <input type="text" class="hidden" name="findBy[{{ locale }}][locale]" id="translationKey" value="{{ locale }}">
-
-                                        {% for message in translation.getMessages() %}
-                                            {% if message.locale == locale %}
-                                                <input type="text" name="messages[{{ locale }}]"value="{{ message.message }}">
-                                                <input class="hidden" type="text" name="statuses[{{ locale }}]"value="{{ message.status }}">
-                                                <p>Status: <span
-                                                {% if message.getStatus() == 'fresh' %}
-                                                    class="label label-success">
-                                                {% else %}
-                                                    class="label label-danger">
-                                                {% endif %}
-                                                {{ message.getStatus() }}</span></p>
-                                            {% endif %}
-                                        {% endfor %}
+                                {% if not translation.hasMessage(locale) %}
+                                    <input type="text" name="messages[{{ locale }}]"value="">
+                                    <input class="hidden" type="text" name="statuses[{{ locale }}]"value="dirty">
+                                        <p>Status: </p>
+                                {% endif %}
+                                {% for message in translation.getMessages() %}
+                                    {% if message.locale == locale %}
+                                        <input type="text" name="messages[{{ locale }}]"value="{{ message.message }}">
+                                        <input class="hidden" type="text" name="statuses[{{ locale }}]"value="{{ message.status }}">
+                                        <p>Status: <span
+                                        {% if message.getStatus() == 'fresh' %}
+                                            class="label label-success">
+                                        {% else %}
+                                            class="label label-danger">
+                                        {% endif %}
+                                        {{ message.getStatus() }}</span></p>
+                                    {% endif %}
+                                {% endfor %}
                             </div>
                         </li>
                     {% endfor %}
