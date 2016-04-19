@@ -109,7 +109,6 @@ class ListController extends Controller
             $translation = $translationObject;
         }
         $params['translation'] = $translation;
-        $params['filters_manager'] = $fmr;
         $params['locales'] = $this->buildLocalesList($fmr->getFilters()['locale']);
 
         return $this->render(

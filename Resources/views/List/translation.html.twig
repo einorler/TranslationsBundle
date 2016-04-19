@@ -1,4 +1,4 @@
-{% extends 'ONGRTranslationsBundle::layout1.html.twig' %}
+{% extends 'ONGRTranslationsBundle::layout.html.twig' %}
 
 {% block content %}
     <div class="container">
@@ -49,13 +49,13 @@
                                 {% if not translation.hasMessage(locale) %}
                                     <input type="text" name="messages[{{ locale }}]"value="">
                                     <input class="hidden" type="text" name="statuses[{{ locale }}]"value="dirty">
-                                        <p>Status: </p>
+                                        <p>{% trans from 'ONGRTranslations' %}label.status{% endtrans %}: </p>
                                 {% endif %}
                                 {% for message in translation.getMessages() %}
                                     {% if message.locale == locale %}
                                         <input type="text" name="messages[{{ locale }}]"value="{{ message.message }}">
                                         <input class="hidden" type="text" name="statuses[{{ locale }}]"value="{{ message.status }}">
-                                        <p>Status: <span
+                                        <p>{% trans from 'ONGRTranslations' %}label.status{% endtrans %}: <span
                                         {% if message.getStatus() == 'fresh' %}
                                             class="label label-success">
                                         {% else %}

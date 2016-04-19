@@ -18,7 +18,7 @@
                 <div class="navbar-header">
                     <a class="navbar-brand" href="{{ path('ongr_translations_list_page') }}">ONGR Translations</a>
                 </div>
-
+                {% if filters_manager is defined %}
                 <div class="collapse navbar-collapse pull-right">
                     {% import 'ONGRTranslationsBundle:macros:filters.html.twig' as filter_macros %}
                     {% block filters %}
@@ -50,6 +50,7 @@
                         <button class="btn btn-primary" ng-click="openExportModal()" >Export</button>
                     </div>
                 </div><!-- /.navbar-collapse -->
+                {% endif %}
             </div><!-- /.container-fluid -->
         </nav>
     {%- endblock -%}
