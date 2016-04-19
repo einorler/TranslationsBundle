@@ -33,7 +33,10 @@
         </div>
         <div class="col-md-6">
             <h3>{% trans from 'ONGRTranslations' %}label.message{% endtrans %}</h3>
-            <form action="{{ path('ongr_translations_api_edit') }}" method="post">
+            <form action="{{ path('ongr_translations_translation_messages_edit') }}" method="post">
+                <input type="text" class="hidden" name="id" id="translationId" value="{{ translation.id }}">
+                <input type="text" class="hidden" name="key" id="translationId" value="{{ translation.key }}">
+                <input type="text" class="hidden" name="name" id="translationActionName" value="messages">
                 <ul class="list-inline">
                     {% for locale,active in locales %}
                         <li class="col-md-12">
@@ -41,28 +44,22 @@
                                 <strong>{{ locale }}:</strong>
                             </div>
                             <div class="col-sm-10">
-                                <input type="text" name="locale-{{ locale }}"
-                                    classvalue="{{ translation.key|trans({}, 'ONGRTranslations', locale) }}"
+                                <input type="text" class="hidden" name="locales[]" id="translationKey" value="{{ locale }}">
+                                <input type="text" class="hidden" name="findBy[{{ locale }}][locale]" id="translationKey" value="{{ locale }}">
+
                                         {% for message in translation.getMessages() %}
                                             {% if message.locale == locale %}
-                                                value="{{ message.message }}"
+                                                <input type="text" name="messages[{{ locale }}]"value="{{ message.message }}">
+                                                <input class="hidden" type="text" name="statuses[{{ locale }}]"value="{{ message.status }}">
+                                                <p>Status: <span
+                                                {% if message.getStatus() == 'fresh' %}
+                                                    class="label label-success">
+                                                {% else %}
+                                                    class="label label-danger">
+                                                {% endif %}
+                                                {{ message.getStatus() }}</span></p>
                                             {% endif %}
                                         {% endfor %}
-                                    >
-                                <p>Status:
-                                    {% for message in translation.getMessages() %}
-                                    {% if message.getLocale() == locale %}
-                                        <span
-                                                {% if message.getStatus() == 'fresh' %}
-                                                class="label label-success">
-                                    {% else %}
-                                        class="label label-danger">
-                                            {% endif %}
-                                            {{ message.getStatus() }}
-                                    </span>
-                                    {% endif %}
-                                {% endfor %}
-                                </p>
                             </div>
                         </li>
                     {% endfor %}

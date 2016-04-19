@@ -73,3 +73,11 @@ ongr_translations_translation_add_tag:
         _controller: ONGRTranslationsBundle:Translation:addTag
     options:
         expose: true
+
+ongr_translations_translation_messages_edit:
+    path: /translation/messages/edit
+    methods: [POST]
+    defaults:
+        _controller: ONGRTranslationsBundle:Translation:edit
+    options:
+        expose: true
